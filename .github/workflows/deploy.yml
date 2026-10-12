@@ -1,52 +1,48 @@
-name: Deploy Flutter library to GitHub Pages
+
+name: Deploy Flutter Web
+
 on:
   push:
-    branches: [main, master]
-  workflow_dispatch:
+    branches:
+      - main
+
 permissions:
   contents: read
-concurrency:
-  group: github-pages
-  cancel-in-progress: false
+  pages: write
+  id-token: write
+
 jobs:
   build:
-    permissions:
-      contents: read
-      pages: read
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout source
+      - name: Checkout
         uses: actions/checkout@v6
-      - name: Install Flutter
+
+      - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: stable
-          cache: true
-      - name: Generate platforms, install packages, analyze and test
-        run: dart tool/setup.dart
-      - name: Configure Pages
-        id: pages
-        uses: actions/configure-pages@v5
-      - name: Build Flutter web with the Pages base path
-        env:
-          PAGES_BASE_PATH: ${{ steps.pages.outputs.base_path }}
-        run: |
-          base_href="${PAGES_BASE_PATH%/}/"
-          flutter build web --release --base-href "$base_href"
-          touch build/web/.nojekyll
-      - name: Upload web artifact
-        uses: actions/upload-pages-artifact@v4
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Build Flutter Web
+        run: flutter build web --release --base-href "/${{ github.event.repository.name }}/"
+
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v3
         with:
           path: build/web
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
+
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
