@@ -1,0 +1,3 @@
+The QuestPixel font and valley.png are original assets created for this project.
+You may use, modify, and redistribute them with this project or other projects.
+They contain no Pokemon or Stardew Valley game sprites, logos, or copied art.

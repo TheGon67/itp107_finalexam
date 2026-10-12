@@ -1,0 +1,7 @@
+PASS: POST returned HTTP 201 with generated string ID 1.
+PASS: GET found the newly persisted post.
+PASS: DELETE returned HTTP 200.
+PASS: GET confirmed the test post was removed.
+
+These checks were made with a Python HTTP client against the supplied endpoint. Flutter UI, browser CORS, tests, build and GitHub Pages deployment remain unverified in this environment.
+Cross-origin GET response Access-Control-Allow-Origin: *
